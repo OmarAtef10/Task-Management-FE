@@ -1,32 +1,40 @@
 // src/context/ThemeContext.tsx
-import { createContext, useEffect, useState, ReactNode } from 'react';
+import {createContext, useEffect, useState, ReactNode} from 'react';
 
 type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
+    theme: Theme;
+    toggleTheme: () => void;
 }
 
+
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
-  toggleTheme: () => {},
+    theme: 'light',
+    toggleTheme: () => {
+    },
 });
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+export const ThemeProvider = ({children}: { children: ReactNode }) => {
+    const [theme, setTheme] = useState<Theme>('light');
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-  };
+    const toggleTheme = () => {
+        if (theme === "dark") {
+            const audio = new Audio('/flashbang.mp3');
+            audio.currentTime = 1.8;
+            audio.play().catch(err => console.error('Audio playback failed:', err));
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+        }
+        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    };
+
+    return (
+        <ThemeContext.Provider value={{theme, toggleTheme}}>
+            {children}
+        </ThemeContext.Provider>
+    );
 };
